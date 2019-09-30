@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "titanoboa"
+version = "0.0.1"
+description = "Historical dataframe building"
+authors = [
+    "Oleg Sokolov <sokolegg@yandex.ru>"
+]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/sokolegg/titanoboa"
+keywords = ["historical", 'pandas']
+
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+# Requirements
+[tool.poetry.dependencies]
+python = "^3.6"
+pandas = "^0.25.0"
+
+[tool.poetry.scripts]
+titanoboa = "titanoboa.titanoboa:main"
