@@ -16,7 +16,7 @@ class TestProjector(unittest.TestCase):
 		df['date'] = pd.to_datetime(df['date'])
 		df = df.set_index('date')
 		h = tnb.Historical(df)
-		daily = h.interpolate('linear')['01-01-2019','01-05-2019','1day']
+		daily = h.interpolate('linear')['01-01-2019','01-05-2019',1]
 		missed_must_be = 2
 		self.assertEqual(daily['temperature'][1], missed_must_be)
 		
