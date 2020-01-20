@@ -1,6 +1,6 @@
 pip=env/bin/python -m pip
 python=env/bin/python3
-titanoboa=env/bin/projector
+sequentia=env/bin/sequentia
 
 all: install
 
@@ -17,7 +17,7 @@ build:
 	@python -m venv env
 
 install: build
-	$(pip) install dist/titanoboa*.whl
+	$(pip) install dist/sequentia*.whl
 
 test: install
 	cd tests && ../$(python) test.py

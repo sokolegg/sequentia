@@ -8,11 +8,15 @@ class Interpolation:
 		self.method = method
 
 	def apply(self, axes):
-		joined = pd.concat([self.historical.raw, axes.points])
-		print(joined)
+		joined = pd.concat([self.historical, axes.points])
 		cleared = joined.groupby(joined.index).first()
-		interpolated = cleared.interpolate(self.method)
+		interpolated = cleared.interpolate(self.method, limit_direction='both')
 		return interpolated
+
+	def __getitem__(self, expanding):
+		axes = TimeAxes(self, expanding)
+		interpolated = self.apply(axes)
+		return Historical(interpolated)
 
 class Extrapolation:
 
@@ -26,8 +30,8 @@ class TimeAxes():
 
 	def __init__(self, historical, expanding):
 		self.historical = historical
-		self.start = pd.to_datetime(expanding[0] if expanding[0] is not None else self.historical.raw.index.min())
-		self.end = pd.to_datetime(expanding[1] if expanding[1] is not None else self.historical.raw.index.max())
+		self.start = pd.to_datetime(expanding[0] if expanding[0] is not None else self.historical.index.min())
+		self.end = pd.to_datetime(expanding[1] if expanding[1] is not None else self.historical.index.max())
 		self.step = expanding[2]
 		self.points = self.build()
 
@@ -41,26 +45,22 @@ class TimeAxes():
 		expanded = pd.DataFrame(index=dates, data=None)
 		return expanded
 
-class Historical:
+class Historical(pd.DataFrame):
 
-	def convert_raw(self, raw):
-		if isinstance(raw, pd.DataFrame):
-			return raw
-		else:
-			return pd.DataFrame(raw)
-
-	def __init__(self, raw):
-		self.raw = self.convert_raw(raw)
-		empty_filling = zip(self.raw.columns, [None]*len(self.raw.columns))
+	def __init__(self, data):
+		super().__init__(data)
+		empty_filling = zip(self.columns, [None]*len(self.columns))
 		self.interpolates = {'temperature' : 'linear'} #{empty_filling}
 		self.extrapolates = {empty_filling}
 
-	def __getitem__(self, expanding):
-		axes = TimeAxes(self, expanding)
-		interpolated = Interpolation(self, None, 'linear').apply(axes)
-		return interpolated
-
 	def interpolate(self, method, columns=None):
-		return self
+		return Interpolation(self, method=method, column=None)
+
+	def expand(self, *expanding):
+		for e in expanding:
+			df = self
+			if e in ['weekday', 'month', 'year']:
+				df[e] = getattr(self.index, e)
+		return df
 
 

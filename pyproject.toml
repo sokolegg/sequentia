@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "titanoboa"
+name = "sequentia"
 version = "0.0.1"
 description = "Historical dataframe building"
 authors = [
@@ -7,7 +7,7 @@ authors = [
 ]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/sokolegg/titanoboa"
+repository = "https://github.com/sokolegg/sequentia"
 keywords = ["historical", 'pandas']
 
 classifiers = [
@@ -18,6 +18,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6"
 pandas = "^0.25.0"
+xlrd = ">=1.0.0"
 
 [tool.poetry.scripts]
-titanoboa = "titanoboa.titanoboa:main"
+titanoboa = "sequentia.sequentia:main"
